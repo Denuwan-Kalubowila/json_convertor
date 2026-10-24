@@ -9,15 +9,14 @@ fn run(input: &Path, output: &Path) -> Result<(), Box<dyn Error>> {
     //let input_path = Path::new("input.txt");
     //let output_path = Path::new("output.txt");
     let content = file_io::read_to_string(input)?;
-    let value = formats::json::parse_json(&content)?;
-    let formated_content = formats::json::format_json(&value)?;
+    let lines = formats::json::json_to_jsonl(&content)?;
 
-    file_io::write_string(output, &formated_content)?;
-
-    let lines = file_io::read_lines(input)?;
     file_io::write_lines(output, &lines)?;
 
-    println!("File processed sucessfully!");
+    println!(
+        "JSON to JSONL conversion completed: {} records written.",
+        lines.len()
+    );
 
     Ok(())
 }

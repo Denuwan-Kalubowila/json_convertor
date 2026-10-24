@@ -1,11 +1,28 @@
-{
-  "name": "Denuwan",
-  "age": 24,
-  "is_student": true,
-  "skills": ["Rust", "Go", "TypeScript"],
-  "address": {
-    "city": "Kandy",
-    "country": "Sri Lanka"
-  },
-  "nickname": null
-}
+[
+    {
+    "name": "Denuwan",
+    "age": 24,
+    "is_student": true,
+    "skills": ["Rust", "Go", "TypeScript"],
+    "address": {
+        "city": "Kandy",
+        "country": "Sri Lanka"
+    },
+    "nickname": null
+    },
+    {
+        "id": 1,
+        "name": "Amal",
+        "active": true
+    },
+    {
+        "id": 2,
+        "name": "Nimal",
+        "active": false
+    },
+    {
+        "id": 3,
+        "name": "Kamal",
+        "active": true
+    }
+]
