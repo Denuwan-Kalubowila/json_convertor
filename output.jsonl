@@ -1,0 +1,4 @@
+{"address":{"city":"Kandy","country":"Sri Lanka"},"age":24,"is_student":true,"name":"Denuwan","nickname":null,"skills":["Rust","Go","TypeScript"]}
+{"active":true,"id":1,"name":"Amal"}
+{"active":false,"id":2,"name":"Nimal"}
+{"active":true,"id":3,"name":"Kamal"}
