@@ -29,3 +29,27 @@ pub fn json_to_jsonl(content: &str) -> Result<Vec<String>, Box<dyn Error>> {
 
     Ok(lines)
 }
+
+pub fn jsonl_to_json(lines: &[String]) -> Result<String, Box<dyn std::error::Error>> {
+    let mut records: Vec<Value> = Vec::new();
+
+    for (index, line) in lines.iter().enumerate() {
+        let line_num = index + 1;
+        let trimed = line.trim();
+
+        if trimed.is_empty() {
+            continue;
+        }
+
+        let record: Value = serde_json::from_str(trimed).map_err(|error| {
+            std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                format!("Invalid json on line {line_num}: {error}"),
+            )
+        })?;
+
+        records.push(record);
+    }
+    let output = serde_json::to_string_pretty(&records)?;
+    Ok(output)
+}
