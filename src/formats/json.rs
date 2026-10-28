@@ -53,3 +53,99 @@ pub fn jsonl_to_json(lines: &[String]) -> Result<String, Box<dyn std::error::Err
     let output = serde_json::to_string_pretty(&records)?;
     Ok(output)
 }
+
+#[cfg(test)]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn converts_json_array_to_jsonl() {
+        let input = r#"
+        [
+            {"id": 1, "name": "Alice"},
+            {"id": 2, "name": "Bob"}
+        ]
+        "#;
+
+        let result = json_to_jsonl(input).unwrap();
+
+        assert_eq!(
+            result,
+            vec![
+                r#"{"id":1,"name":"Alice"}"#,
+                r#"{"id":2,"name":"Bob"}"#
+            ]
+        );
+    }
+
+    #[test]
+    fn rejects_invalid_json() {
+        let input = r#"{"id",1"#;
+
+        let result = json_to_jsonl(input);
+
+        assert!(result.is_err());
+    }
+
+     #[test]
+    fn rejects_json_object_instead_of_array() {
+        let input = r#"{"id": 1, "name": "Alice"}"#;
+
+        let result = json_to_jsonl(input);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn converts_jsonl_array_to_json_array() {
+        let lines = vec![
+            r#"{"id":1,"name":"Alice"}"#.to_string(),
+            r#"{"id":2,"name":"Bob"}"#.to_string(),
+        ];
+
+        let result = jsonl_to_json(&lines).unwrap();
+        let actual:serde_json::Value = serde_json::from_str(&result).unwrap();
+
+        let expected = serde_json::json!([
+            {"id": 1, "name": "Alice"},
+            {"id": 2, "name": "Bob"}
+        ]);
+
+        assert_eq!(actual,expected);
+    }
+
+    #[test]
+    fn ignores_empty_jsonl_lines() {
+        let lines = vec![
+            r#"{"id":1}"#.to_string(),
+            "".to_string(),
+            "   ".to_string(),
+            r#"{"id":2}"#.to_string(),
+        ];
+
+        let result = jsonl_to_json(&lines).unwrap();
+        let actual: serde_json::Value =
+            serde_json::from_str(&result).unwrap();
+
+        let expected = serde_json::json!([
+            {"id": 1},
+            {"id": 2}
+        ]);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn reports_invalid_jsonl_line_number() {
+        let lines = vec![
+            r#"{"id":1}"#.to_string(),
+            r#"{"id": "#.to_string(),
+        ];
+
+        let error = jsonl_to_json(&lines).unwrap_err();
+
+        assert!(error.to_string().contains("line 2"));
+    }
+
+}
