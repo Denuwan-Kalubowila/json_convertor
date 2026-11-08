@@ -72,10 +72,7 @@ mod tests {
 
         assert_eq!(
             result,
-            vec![
-                r#"{"id":1,"name":"Alice"}"#,
-                r#"{"id":2,"name":"Bob"}"#
-            ]
+            vec![r#"{"id":1,"name":"Alice"}"#, r#"{"id":2,"name":"Bob"}"#]
         );
     }
 
@@ -88,7 +85,7 @@ mod tests {
         assert!(result.is_err());
     }
 
-     #[test]
+    #[test]
     fn rejects_json_object_instead_of_array() {
         let input = r#"{"id": 1, "name": "Alice"}"#;
 
@@ -105,14 +102,14 @@ mod tests {
         ];
 
         let result = jsonl_to_json(&lines).unwrap();
-        let actual:serde_json::Value = serde_json::from_str(&result).unwrap();
+        let actual: serde_json::Value = serde_json::from_str(&result).unwrap();
 
         let expected = serde_json::json!([
             {"id": 1, "name": "Alice"},
             {"id": 2, "name": "Bob"}
         ]);
 
-        assert_eq!(actual,expected);
+        assert_eq!(actual, expected);
     }
 
     #[test]
@@ -125,8 +122,7 @@ mod tests {
         ];
 
         let result = jsonl_to_json(&lines).unwrap();
-        let actual: serde_json::Value =
-            serde_json::from_str(&result).unwrap();
+        let actual: serde_json::Value = serde_json::from_str(&result).unwrap();
 
         let expected = serde_json::json!([
             {"id": 1},
@@ -138,14 +134,10 @@ mod tests {
 
     #[test]
     fn reports_invalid_jsonl_line_number() {
-        let lines = vec![
-            r#"{"id":1}"#.to_string(),
-            r#"{"id": "#.to_string(),
-        ];
+        let lines = vec![r#"{"id":1}"#.to_string(), r#"{"id": "#.to_string()];
 
         let error = jsonl_to_json(&lines).unwrap_err();
 
         assert!(error.to_string().contains("line 2"));
     }
-
 }
